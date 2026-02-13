@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { storyChapters } from '@/lib/story-data';
+import { STORY_STEPS } from '@/lib/story-data';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Send, HeartPulse } from 'lucide-react';
 import { StoryCard } from './PolaroidCard';
@@ -16,20 +16,17 @@ type StorybookProps = {
 
 const variants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? '100%' : '-100%',
-    scale: 0.8,
+    x: direction > 0 ? '100vw' : '-100vw',
     opacity: 0,
   }),
   center: {
     zIndex: 1,
     x: 0,
-    scale: 1,
     opacity: 1,
   },
   exit: (direction: number) => ({
     zIndex: 0,
-    x: direction < 0 ? '100%' : '-100%',
-    scale: 0.8,
+    x: direction < 0 ? '100vw' : '-100vw',
     opacity: 0,
   }),
 };
@@ -40,7 +37,7 @@ export function Storybook({ onComplete }: StorybookProps) {
   const [messageSent, setMessageSent] = useState(false);
   const { toast } = useToast();
 
-  const chapter = storyChapters[page];
+  const chapter = STORY_STEPS[page];
 
   // Reset state when page changes
   useEffect(() => {
@@ -49,7 +46,7 @@ export function Storybook({ onComplete }: StorybookProps) {
   }, [page]);
 
   const handleSendMessage = () => {
-    // Here you would normally send the message to a backend
+    if (!message.trim()) return;
     console.log(`Message for page ${page}: ${message}`);
     setMessageSent(true);
     toast({
@@ -64,7 +61,7 @@ export function Storybook({ onComplete }: StorybookProps) {
   };
 
   const paginate = (newDirection: number) => {
-    if (page + newDirection >= storyChapters.length) {
+    if (page + newDirection >= STORY_STEPS.length) {
       onComplete();
     } else {
       setPage([page + newDirection, newDirection]);
@@ -73,62 +70,74 @@ export function Storybook({ onComplete }: StorybookProps) {
 
   return (
     <div className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      <AnimatePresence initial={false} custom={direction} mode="wait">
-        <motion.div
-          key={page}
-          custom={direction}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            x: { type: 'spring', stiffness: 300, damping: 30 },
-            opacity: { duration: 0.4 },
-            scale: { duration: 0.4 },
-          }}
-          className="absolute w-full h-full flex flex-col items-center justify-center p-4 md:p-8"
-        >
-          <div className="w-full max-w-lg mx-auto flex flex-col items-center text-center gap-6">
-              <motion.h2 
-                  className="font-headline text-4xl md:text-5xl text-primary mb-2 drop-shadow-lg"
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-              >
-                  {chapter.title}
-              </motion.h2>
-
-              <StoryCard image={chapter.image} />
-              
-              <div className="w-full max-w-md">
-                <Typewriter text={chapter.question} className="text-foreground/90 text-lg mb-4" />
-                <Textarea
-                  placeholder="How do you feel seeing this?"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="bg-white/10 dark:bg-black/20 placeholder:text-foreground/50 h-24 backdrop-blur-sm rounded-lg border-primary/30 focus:ring-accent"
-                  disabled={messageSent}
-                />
-                <Button 
-                  onClick={handleSendMessage} 
-                  disabled={!message || messageSent}
-                  className="w-full mt-4 bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/30"
+      <div className="md:w-[min(600px,80%)] md:h-[min(800px,90%)] md:bg-white/10 md:backdrop-blur-xl md:rounded-2xl md:border md:border-white/20 md:shadow-2xl flex items-center justify-center">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
+          <motion.div
+            key={page}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: 'spring', stiffness: 300, damping: 30 },
+              opacity: { duration: 0.3 },
+            }}
+            className="absolute w-full h-full flex flex-col items-center justify-center p-4"
+          >
+            <div className="w-[90vw] md:w-full max-w-lg mx-auto flex flex-col items-center text-center gap-6">
+                <motion.h2 
+                    className="font-headline text-4xl md:text-5xl text-primary mb-2 drop-shadow-lg"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
                 >
-                  <Send className="mr-2"/>
-                  {messageSent ? 'Sent!' : 'Bachwa ko bhej do'}
-                </Button>
-              </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+                    {chapter.title}
+                </motion.h2>
 
-      <Button
-        onClick={() => paginate(1)}
-        disabled={!messageSent}
-        className="absolute bottom-10 right-10 z-10 rounded-full h-16 w-16 bg-primary hover:bg-primary/90 shadow-xl shadow-primary/30 disabled:bg-muted disabled:shadow-none disabled:opacity-50"
-      >
-        <ArrowRight className="h-8 w-8" />
-      </Button>
+                <StoryCard image={chapter.image} />
+                
+                <div className="w-full max-w-md">
+                  <Typewriter text={chapter.question} className="text-foreground/90 text-lg mb-4" />
+                  <Textarea
+                    placeholder={chapter.placeholderText}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="bg-white/10 dark:bg-black/20 placeholder:text-foreground/50 h-24 backdrop-blur-sm rounded-lg border-primary/30 focus:ring-accent"
+                    disabled={messageSent}
+                  />
+                  <Button 
+                    onClick={handleSendMessage} 
+                    disabled={!message || messageSent}
+                    className="w-full mt-4 bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/30"
+                  >
+                    <Send className="mr-2"/>
+                    {messageSent ? 'Sent!' : 'Bachwa ko bhej do'}
+                  </Button>
+                </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <AnimatePresence>
+        {messageSent && (
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                className="absolute bottom-10 right-10 z-10"
+            >
+                <Button
+                    onClick={() => paginate(1)}
+                    className="rounded-full h-16 w-16 bg-primary hover:bg-primary/90 shadow-xl shadow-primary/30"
+                >
+                    <ArrowRight className="h-8 w-8" />
+                </Button>
+            </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

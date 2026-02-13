@@ -37,16 +37,16 @@ export function StoryCard({ image, className }: StoryCardProps) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        'relative bg-card/80 backdrop-blur-md p-4 pb-8 shadow-2xl shadow-primary/20 rounded-lg flex-shrink-0 w-[300px] md:w-[380px]',
+        'relative bg-white/20 backdrop-blur-md p-4 pb-8 shadow-2xl shadow-primary/20 rounded-lg flex-shrink-0 w-full max-w-[300px] md:max-w-[380px] border border-white/20',
         className
       )}
     >
-      <div className="relative w-full h-[340px] md:h-[420px] bg-muted/50 rounded-md overflow-hidden">
+      <div className="relative w-full h-[340px] md:h-[420px] bg-black/10 rounded-md overflow-hidden">
         <Image
           src={image.imageUrl}
           alt={image.description}
           fill
-          sizes="(max-width: 768px) 300px, 380px"
+          sizes="(max-width: 768px) 80vw, 380px"
           className="object-cover"
           data-ai-hint={image.imageHint}
           priority
@@ -58,7 +58,7 @@ export function StoryCard({ image, className }: StoryCardProps) {
           }}
         />
       </div>
-      <p className="font-body text-center mt-4 text-sm text-card-foreground/70">
+      <p className="font-body text-center mt-4 text-sm text-foreground/70">
         {image.description}
       </p>
     </motion.div>

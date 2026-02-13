@@ -1,10 +1,10 @@
-import { memories } from '@/lib/memories-data';
+import { FINAL_MEMORIES } from '@/lib/memories-data';
 import Image from 'next/image';
 
 export function ImagePreloader() {
   return (
     <div className="absolute left-[-9999px] top-[-9999px]">
-      {memories.map((mem) => (
+      {FINAL_MEMORIES.map((mem) => (
         <Image
           key={mem.id}
           src={mem.imageUrl}

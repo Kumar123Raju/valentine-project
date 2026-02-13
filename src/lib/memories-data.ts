@@ -5,7 +5,7 @@ export type Memory = {
 };
 
 // Replace these with your actual image URLs for the final photo avalanche
-export const memories: Memory[] = [
+export const FINAL_MEMORIES: Memory[] = [
   { id: 'mem-1', imageUrl: 'https://picsum.photos/seed/mem1/400/600', imageHint: 'couple happy' },
   { id: 'mem-2', imageUrl: 'https://picsum.photos/seed/mem2/600/400', imageHint: 'nature landscape' },
   { id: 'mem-3', imageUrl: 'https://picsum.photos/seed/mem3/400/600', imageHint: 'city night' },

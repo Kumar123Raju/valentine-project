@@ -25,7 +25,7 @@ export function GlowingVault({ onUnlock }: GlowingVaultProps) {
       onUnlock();
     } else {
       setError(true);
-      setTimeout(() => setError(false), 300);
+      setTimeout(() => setError(false), 500);
       toast({
         variant: "destructive",
         title: "Access Denied",
@@ -37,34 +37,40 @@ export function GlowingVault({ onUnlock }: GlowingVaultProps) {
   const formVariants = {
     normal: { scale: 1, filter: 'hue-rotate(0deg)' },
     error: { 
-      x: [-8, 8, -8, 8, 0], 
-      scale: [1, 1.02, 1, 1.02, 1],
-      filter: 'hue-rotate(45deg)',
-      transition: { duration: 0.4 } 
+      x: [-5, 5, -5, 5, -5, 5, 0], 
+      scale: [1, 1.01, 1, 1.01, 1],
+      filter: 'hue-rotate(20deg)',
+      transition: { duration: 0.5, type: 'spring', stiffness: 500, damping: 15 } 
     },
   };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 bg-background">
       <ImagePreloader />
-       <motion.div
-         className="absolute inset-0 mesh-gradient -z-10"
-        />
+      <motion.div
+        className="absolute inset-0 mesh-gradient -z-10"
+      />
       <motion.div
         variants={formVariants}
         animate={error ? 'error' : 'normal'}
-        className="relative"
+        className="relative flex flex-col items-center justify-center"
       >
-        <div className="absolute -inset-2 bg-gradient-to-r from-primary to-accent rounded-full blur-xl opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-        <motion.form
-          onSubmit={handleSubmit}
-          className="relative w-80 h-80 md:w-96 md:h-96 p-8 rounded-full bg-background/80 backdrop-blur-2xl shadow-2xl border border-primary/20 flex flex-col items-center justify-center gap-6"
+        <motion.div
+          className="absolute -inset-4 bg-gradient-to-r from-primary via-accent to-pink-500 rounded-full blur-2xl opacity-70 animate-pulse"
+          style={{ animationDuration: '5s' }}
+        />
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+          className="relative w-80 h-80 md:w-96 md:h-96 p-8 rounded-full bg-card/10 backdrop-blur-2xl shadow-2xl border border-white/20 flex flex-col items-center justify-center gap-6"
         >
           <h1 className="font-headline text-5xl text-center text-primary drop-shadow-lg">LoveBloom</h1>
-          <p className="text-center text-foreground/80 -mt-4">Unlock with the secret name.</p>
+          <p className="text-center text-foreground/80 -mt-4">A secret name to unlock our story.</p>
+          <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full">
             <Input
               type="password"
-              placeholder="Enter the secret name"
+              placeholder="What do you call me?"
               value={secretName}
               onChange={(e) => setSecretName(e.target.value)}
               className="text-center bg-white/10 dark:bg-black/20 placeholder:text-foreground/50 h-12 text-lg backdrop-blur-sm rounded-full border-primary/30 focus:ring-accent"
@@ -72,7 +78,8 @@ export function GlowingVault({ onUnlock }: GlowingVaultProps) {
             <Button type="submit" size="icon" className="w-16 h-16 text-lg bg-primary hover:bg-accent rounded-full text-primary-foreground shadow-lg shadow-primary/30 transition-all duration-300 hover:shadow-accent/50 hover:scale-110 active:scale-100">
               <Heart className="w-7 h-7 fill-current" />
             </Button>
-        </motion.form>
+          </form>
+        </motion.div>
       </motion.div>
     </div>
   );

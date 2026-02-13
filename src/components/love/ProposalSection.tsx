@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -13,30 +12,26 @@ export function ProposalSection() {
   const noButtonRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
-  const [noPos, setNoPos] = useState({ x: 0, y: 0 });
+  // Changed to use top/left for positioning for more reliable rendering
+  const [noPos, setNoPos] = useState({ top: '65%', left: '75%' });
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    if (typeof window !== 'undefined') {
-      // Set initial position away from the center to avoid accidental hover
-      setNoPos({ x: window.innerWidth / 2 + 150, y: window.innerHeight / 2 });
-    }
   }, []);
 
   const handleNoInteraction = () => {
     if (!containerRef.current || !noButtonRef.current) return;
     
-    // Use viewport dimensions for positioning
     const cWidth = window.innerWidth;
     const cHeight = window.innerHeight;
     const { width: bWidth, height: bHeight } = noButtonRef.current.getBoundingClientRect();
     
-    // Ensure the button stays within the viewport with a small padding
-    const newX = Math.random() * (cWidth - bWidth - 40) + 20;
-    const newY = Math.random() * (cHeight - bHeight - 40) + 20;
+    // Ensure the button stays within the viewport with padding
+    const newLeft = Math.random() * (cWidth - bWidth - 40) + 20;
+    const newTop = Math.random() * (cHeight - bHeight - 40) + 20;
     
-    setNoPos({ x: newX, y: newY });
+    setNoPos({ top: `${newTop}px`, left: `${newLeft}px` });
   };
   
   const handleYesClick = () => {
@@ -91,10 +86,11 @@ export function ProposalSection() {
             <motion.div
               ref={noButtonRef}
               className="absolute flex flex-col items-center z-30"
-              animate={{ x: noPos.x, y: noPos.y }}
-              transition={{ type: 'spring', stiffness: 800, damping: 25 }}
+              // Animate top and left directly for more robust positioning
+              animate={noPos}
+              transition={{ type: 'spring', stiffness: 500, damping: 20 }}
               onMouseEnter={isMobile ? undefined : handleNoInteraction}
-              onTouchStart={isMobile ? handleNoInteraction : undefined}
+              onTouchStart={isMobile ? (e) => { e.preventDefault(); handleNoInteraction(); } : undefined}
             >
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-8 py-6 rounded-full">
                 No

@@ -5,6 +5,8 @@ import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from 'fram
 import { Button } from '@/components/ui/button';
 import { Confetti } from './Confetti';
 import { FloatingHearts } from './FloatingHearts';
+import { MemoryExplosion } from './MemoryExplosion';
+import { memories } from '@/lib/memories-data';
 
 export function ProposalSection() {
   const [isYes, setIsYes] = useState(false);
@@ -40,28 +42,30 @@ export function ProposalSection() {
     const dy = mousePos.current.y - buttonCenterY;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    const repulsionForce = 8000;
+    // Increased repulsion and speed for "High-Speed Evasion"
+    const repulsionForce = 20000;
     
-    if (distance < 150) {
+    if (distance < 200) { // Larger detection radius
       setNoCount(c => c + 1);
       const angle = Math.atan2(dy, dx);
+      // More aggressive force calculation
       const force = -repulsionForce / (distance * distance + 1);
-      velocity.current.x += Math.cos(angle) * force;
-      velocity.current.y += Math.sin(angle) * force;
+      velocity.current.x += Math.cos(angle) * force * 1.5;
+      velocity.current.y += Math.sin(angle) * force * 1.5;
     }
 
     // Damping / Friction
-    velocity.current.x *= 0.92;
-    velocity.current.y *= 0.92;
+    velocity.current.x *= 0.90; // Less friction for faster movement
+    velocity.current.y *= 0.90;
 
     let newX = noButtonX.get() + velocity.current.x * (delta / 1000);
     let newY = noButtonY.get() + velocity.current.y * (delta / 1000);
 
-    // Boundary checks
-    if (newX < buttonRect.width / 2) { newX = buttonRect.width / 2; velocity.current.x *= -1; }
-    if (newX > innerWidth - buttonRect.width / 2) { newX = innerWidth - buttonRect.width / 2; velocity.current.x *= -1; }
-    if (newY < buttonRect.height / 2) { newY = buttonRect.height / 2; velocity.current.y *= -1; }
-    if (newY > innerHeight - buttonRect.height / 2) { newY = innerHeight - buttonRect.height / 2; velocity.current.y *= -1; }
+    // Boundary checks to keep it on screen
+    if (newX < buttonRect.width / 2) { newX = buttonRect.width / 2; velocity.current.x *= -1.1; }
+    if (newX > innerWidth - buttonRect.width / 2) { newX = innerWidth - buttonRect.width / 2; velocity.current.x *= -1.1; }
+    if (newY < buttonRect.height / 2) { newY = buttonRect.height / 2; velocity.current.y *= -1.1; }
+    if (newY > innerHeight - buttonRect.height / 2) { newY = innerHeight - buttonRect.height / 2; velocity.current.y *= -1.1; }
 
     noButtonX.set(newX);
     noButtonY.set(newY);
@@ -81,14 +85,25 @@ export function ProposalSection() {
         {isYes && (
           <motion.div
             key="yes-message"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { duration: 1.5, delay: 0.5 } }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center flex-col z-20"
+            className="absolute inset-0 flex items-center justify-center flex-col z-20 pointer-events-none"
           >
-            <h2 className="font-headline text-5xl md:text-8xl text-white drop-shadow-lg animate-pulse">
+            <MemoryExplosion />
+            <motion.div 
+              className="absolute inset-0 bg-primary/30"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 2, delay: memories.length * 0.1 + 1 } }}
+              style={{ filter: 'blur(100px)'}}
+            />
+            <motion.h2 
+              className="font-headline text-5xl md:text-8xl text-white drop-shadow-lg animate-pulse"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1, transition: { duration: 1, delay: memories.length * 0.1 + 1.5, type: 'spring' } }}
+            >
               I Love You Forever!
-            </h2>
+            </motion.h2>
             <Confetti />
             <FloatingHearts count={100} color="text-red-500" />
             <FloatingHearts count={100} color="text-pink-400" />

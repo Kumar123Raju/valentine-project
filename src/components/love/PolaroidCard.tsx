@@ -4,15 +4,13 @@ import Image from 'next/image';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
-import { Typewriter } from './Typewriter';
 
 type StoryCardProps = {
   image: ImagePlaceholder;
   className?: string;
-  quote: string;
 };
 
-export function StoryCard({ image, className, quote }: StoryCardProps) {
+export function StoryCard({ image, className }: StoryCardProps) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -39,7 +37,7 @@ export function StoryCard({ image, className, quote }: StoryCardProps) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        'relative bg-card/80 backdrop-blur-md p-4 pb-12 shadow-2xl shadow-primary/20 rounded-lg flex-shrink-0 w-[300px] md:w-[380px]',
+        'relative bg-card/80 backdrop-blur-md p-4 pb-8 shadow-2xl shadow-primary/20 rounded-lg flex-shrink-0 w-[300px] md:w-[380px]',
         className
       )}
     >
@@ -60,10 +58,7 @@ export function StoryCard({ image, className, quote }: StoryCardProps) {
           }}
         />
       </div>
-      <div className="font-headline text-center mt-4 text-lg text-card-foreground">
-        <Typewriter text={`"${quote}"`} delay={0.8} />
-      </div>
-      <p className="font-body text-center mt-3 text-sm text-card-foreground/70">
+      <p className="font-body text-center mt-4 text-sm text-card-foreground/70">
         {image.description}
       </p>
     </motion.div>

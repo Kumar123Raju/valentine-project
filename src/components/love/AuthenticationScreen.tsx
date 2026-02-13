@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Heart } from 'lucide-react';
+import { ImagePreloader } from './ImagePreloader';
 
 const SECRET_NAME = 'Sweetheart'; // Case-insensitive check
 
@@ -45,6 +46,7 @@ export function GlowingVault({ onUnlock }: GlowingVaultProps) {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 bg-background">
+      <ImagePreloader />
        <motion.div
          className="absolute inset-0 mesh-gradient -z-10"
         />

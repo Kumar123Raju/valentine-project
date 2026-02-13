@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AuthenticationScreen } from '@/components/love/AuthenticationScreen';
+import { GlowingVault } from '@/components/love/AuthenticationScreen';
 import { ProposalContent } from '@/components/love/ProposalContent';
-import { FloatingPetals } from '@/components/love/FloatingPetals';
 
 export default function Home() {
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -19,26 +18,29 @@ export default function Home() {
   };
   
   if (!isClient) {
-    // Return a simple loader or null to avoid hydration mismatch on server
     return (
       <main className="relative min-h-screen w-full overflow-hidden bg-background" />
     );
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-x-hidden">
+    <main className="relative min-h-screen w-full overflow-x-hidden bg-background">
       <AnimatePresence mode="wait">
         {!isUnlocked ? (
           <motion.div
             key="auth"
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.5 }}
+            exit={{ opacity: 0, scale: 1.5 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
           >
-            <FloatingPetals />
-            <AuthenticationScreen onUnlock={handleUnlock} />
+            <GlowingVault onUnlock={handleUnlock} />
           </motion.div>
         ) : (
-          <motion.div key="content">
+          <motion.div 
+            key="content"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
             <ProposalContent />
           </motion.div>
         )}

@@ -6,19 +6,28 @@ import { cn } from '@/lib/utils';
 const confettiColors = [
   'bg-primary',
   'bg-accent',
-  'bg-secondary',
+  'bg-pink-400',
+  'bg-rose-400',
+  'bg-red-500',
 ];
 
 export function Confetti() {
   const [confettiPieces, setConfettiPieces] = useState<JSX.Element[]>([]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   useEffect(() => {
-    const generatedPieces = Array.from({ length: 150 }).map((_, i) => {
+    if (!isClient) return;
+
+    const generatedPieces = Array.from({ length: 300 }).map((_, i) => {
       const style = {
         left: `${Math.random() * 100}%`,
-        animation: `confetti-fall ${Math.random() * 3 + 2}s ease-out ${Math.random() * 2}s forwards`,
+        animation: `confetti-fall ${Math.random() * 4 + 3}s ease-out ${Math.random() * 3}s forwards`,
       };
-      const dimensions = Math.random() * 0.5 + 0.25;
+      const dimensions = Math.random() * 0.6 + 0.3;
       const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
 
       return (
@@ -28,14 +37,16 @@ export function Confetti() {
           style={{
             ...style,
             width: `${dimensions}rem`,
-            height: `${dimensions / 2}rem`,
+            height: `${dimensions / 1.5}rem`,
             transform: `rotate(${Math.random() * 360}deg)`,
           }}
         />
       );
     });
     setConfettiPieces(generatedPieces);
-  }, []);
+  }, [isClient]);
+
+  if (!isClient) return null;
 
   return (
     <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-50">

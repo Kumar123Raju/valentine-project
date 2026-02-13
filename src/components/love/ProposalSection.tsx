@@ -1,34 +1,82 @@
 "use client";
 
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Confetti } from './Confetti';
 import { FloatingHearts } from './FloatingHearts';
 
 export function ProposalSection() {
   const [isYes, setIsYes] = useState(false);
-  const [noPosition, setNoPosition] = useState({ top: '50%', left: 'calc(50% + 100px)' });
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const noButtonRef = useRef<HTMLButtonElement>(null);
   const [noCount, setNoCount] = useState(0);
-  
-  const yesButtonSize = Math.min(20 + noCount * 2, 60);
+  const [isClient, setIsClient] = useState(false);
 
-  const moveNoButton = () => {
-    setNoCount(prev => prev + 1);
-    if (!containerRef.current) return;
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const newTop = Math.random() * (containerRect.height - 60);
-    const newLeft = Math.random() * (containerRect.width - 120);
-    setNoPosition({ top: `${newTop}px`, left: `${newLeft}px` });
-  };
+  const { innerWidth, innerHeight } = isClient ? window : { innerWidth: 0, innerHeight: 0 };
+  
+  const noButtonX = useMotionValue(innerWidth / 2 + 100);
+  const noButtonY = useMotionValue(innerHeight / 2);
+  const velocity = useRef({ x: 0, y: 0 });
+  const mousePos = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    setIsClient(true);
+    const handleMouseMove = (e: MouseEvent) => {
+      mousePos.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useAnimationFrame((_, delta) => {
+    if (!noButtonRef.current || isYes) return;
+
+    const buttonRect = noButtonRef.current.getBoundingClientRect();
+    const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+    const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+
+    const dx = mousePos.current.x - buttonCenterX;
+    const dy = mousePos.current.y - buttonCenterY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    const repulsionForce = 8000;
+    
+    if (distance < 150) {
+      setNoCount(c => c + 1);
+      const angle = Math.atan2(dy, dx);
+      const force = -repulsionForce / (distance * distance + 1);
+      velocity.current.x += Math.cos(angle) * force;
+      velocity.current.y += Math.sin(angle) * force;
+    }
+
+    // Damping / Friction
+    velocity.current.x *= 0.92;
+    velocity.current.y *= 0.92;
+
+    let newX = noButtonX.get() + velocity.current.x * (delta / 1000);
+    let newY = noButtonY.get() + velocity.current.y * (delta / 1000);
+
+    // Boundary checks
+    if (newX < buttonRect.width / 2) { newX = buttonRect.width / 2; velocity.current.x *= -1; }
+    if (newX > innerWidth - buttonRect.width / 2) { newX = innerWidth - buttonRect.width / 2; velocity.current.x *= -1; }
+    if (newY < buttonRect.height / 2) { newY = buttonRect.height / 2; velocity.current.y *= -1; }
+    if (newY > innerHeight - buttonRect.height / 2) { newY = innerHeight - buttonRect.height / 2; velocity.current.y *= -1; }
+
+    noButtonX.set(newX);
+    noButtonY.set(newY);
+  });
 
   const handleYesClick = () => {
     setIsYes(true);
   };
   
+  const yesButtonScale = 1 + noCount * 0.08;
+
+  if (!isClient) return null;
+
   return (
-    <section ref={containerRef} className="w-full relative py-24 text-center min-h-screen flex flex-col items-center justify-center overflow-hidden px-4">
+    <div ref={containerRef} className="w-full relative py-24 text-center min-h-screen flex flex-col items-center justify-center overflow-hidden px-4">
       <AnimatePresence>
         {isYes && (
           <motion.div
@@ -36,13 +84,14 @@ export function ProposalSection() {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center flex-col"
+            className="absolute inset-0 flex items-center justify-center flex-col z-20"
           >
-            <h2 className="font-headline text-5xl md:text-7xl text-primary animate-pulse">
-              I Love You More!
+            <h2 className="font-headline text-5xl md:text-8xl text-white drop-shadow-lg animate-pulse">
+              I Love You Forever!
             </h2>
             <Confetti />
-            <FloatingHearts count={50} color="text-red-500" />
+            <FloatingHearts count={100} color="text-red-500" />
+            <FloatingHearts count={100} color="text-pink-400" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -55,45 +104,47 @@ export function ProposalSection() {
             exit={{ opacity: 0, scale: 0.8 }}
             className="flex flex-col items-center"
           >
-            <h2 className="font-headline text-5xl md:text-7xl text-primary mb-12">
+            <h2 className="font-headline text-5xl md:text-7xl text-primary mb-20 drop-shadow-md">
               Will you be my Valentine forever?
             </h2>
-            <div className="relative w-[300px] h-[100px] flex items-center justify-center">
+            <div className="fixed inset-0">
               <motion.div
                 className="absolute"
-                style={{ left: 'calc(50% - 150px)' }}
-                animate={{ scale: 1 + noCount * 0.1 }}
-                whileHover={{ scale: 1.1 + noCount * 0.1 }}
-                whileTap={{ scale: 1.2 + noCount * 0.1 }}
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  translateX: '-50%',
+                  translateY: '-50%',
+                }}
+                animate={{ scale: yesButtonScale }}
+                whileHover={{ scale: yesButtonScale * 1.1 }}
+                whileTap={{ scale: yesButtonScale * 1.2 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 10 }}
               >
                 <Button
-                  style={{ fontSize: `${yesButtonSize}px`, padding: `${yesButtonSize/2}px ${yesButtonSize}px`}}
-                  className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full z-10 h-auto"
+                  style={{
+                    fontSize: `${Math.min(24 + noCount, 60)}px`,
+                    padding: `${Math.min(16 + noCount * 0.5, 40)}px ${Math.min(32 + noCount, 80)}px`,
+                    boxShadow: `0 0 30px 5px hsl(var(--accent) / 0.7)`,
+                  }}
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full z-10 h-auto animate-pulse"
                   onClick={handleYesClick}
                 >
                   Yes!
                 </Button>
               </motion.div>
 
-              <motion.div
-                className="absolute"
-                style={{ top: noPosition.top, left: noPosition.left }}
-                transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                onHoverStart={moveNoButton}
+              <motion.button
+                ref={noButtonRef}
+                style={{ x: noButtonX, y: noButtonY, position: 'fixed', top: 0, left: 0, translateX: '-50%', translateY: '-50%' }}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-8 py-6 rounded-full"
               >
-                <Button
-                  size="lg"
-                  variant="destructive"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-8 py-6 rounded-full"
-                >
-                  No
-                </Button>
-              </motion.div>
+                No
+              </motion.button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </div>
   );
 }

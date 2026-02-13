@@ -1,9 +1,9 @@
 "use client";
 
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { PolaroidCard } from './PolaroidCard';
+import { StoryCard } from './PolaroidCard';
 
-const rotations = ['rotate-[-2deg]', 'rotate-[1deg]', 'rotate-[3deg]', 'rotate-[-3deg]', 'rotate-[2deg]'];
+const rotations = ['rotate-[-2deg]', 'rotate-[1deg]', 'rotate-[3deg]',-[-3deg]', 'rotate-[2deg]'];
 
 export function PhotoGallery() {
   const images = PlaceHolderImages.filter(img => img.id.startsWith('gallery-'));
@@ -16,7 +16,7 @@ export function PhotoGallery() {
         </h2>
         <div className="flex gap-8 md:gap-16 items-center overflow-x-auto py-8 px-4 -mx-4 scrollbar-hide">
           {images.map((image, index) => (
-            <PolaroidCard 
+            <StoryCard 
               key={image.id}
               image={image} 
               className={rotations[index % rotations.length]}

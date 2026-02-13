@@ -13,22 +13,31 @@ type FloatingHeartsProps = {
   color?: string;
 }
 
-export function FloatingHearts({ count = 20, color = 'text-red-500' }: FloatingHeartsProps) {
+export function FloatingHearts({ count = 50, color = 'text-red-500' }: FloatingHeartsProps) {
   const [hearts, setHearts] = useState<JSX.Element[]>([]);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const generatedHearts = Array.from({ length: count }).map((_, i) => {
       const style = {
         left: `${Math.random() * 100}%`,
         animation: `float ${Math.random() * 8 + 7}s linear ${Math.random() * 10}s infinite`,
-        width: `${Math.random() * 30 + 15}px`,
-        height: `${Math.random() * 30 + 15}px`,
-        opacity: Math.random() * 0.7 + 0.3,
+        width: `${Math.random() * 40 + 20}px`,
+        height: `${Math.random() * 40 + 20}px`,
+        opacity: Math.random() * 0.8 + 0.2,
       };
-      return <HeartIcon key={i} className={`absolute bottom-[-50px] ${color}`} style={style} />;
+      return <HeartIcon key={i} className={`absolute bottom-[-50px] ${color} opacity-50`} style={style} />;
     });
     setHearts(generatedHearts);
-  }, [count, color]);
+  }, [count, color, isClient]);
+
+  if (!isClient) return null;
 
   return (
     <div className="fixed top-0 left-0 w-full h-full z-50 overflow-hidden pointer-events-none">

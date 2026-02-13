@@ -19,7 +19,8 @@ export function ProposalSection() {
   useEffect(() => {
     setIsClient(true);
     if (typeof window !== 'undefined') {
-      setNoPos({ x: window.innerWidth / 2 + 100, y: window.innerHeight / 2 });
+      // Set initial position away from the center to avoid accidental hover
+      setNoPos({ x: window.innerWidth / 2 + 150, y: window.innerHeight / 2 });
     }
   }, []);
 
@@ -31,7 +32,8 @@ export function ProposalSection() {
     const cHeight = window.innerHeight;
     const { width: bWidth, height: bHeight } = noButtonRef.current.getBoundingClientRect();
     
-    const newX = Math.random() * (cWidth - bWidth - 40) + 20; // Add padding
+    // Ensure the button stays within the viewport with a small padding
+    const newX = Math.random() * (cWidth - bWidth - 40) + 20;
     const newY = Math.random() * (cHeight - bHeight - 40) + 20;
     
     setNoPos({ x: newX, y: newY });
@@ -42,6 +44,7 @@ export function ProposalSection() {
   };
 
   if (!isClient) {
+    // Render nothing on the server to prevent hydration mismatches
     return null;
   }
 
@@ -56,8 +59,7 @@ export function ProposalSection() {
           <motion.div
             key="question"
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, y: -100 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            exit={{ opacity: 0, y: -100, transition: { duration: 0.5, ease: 'easeOut' } }}
             className="flex flex-col items-center justify-center fixed inset-0"
           >
             <h2 className="font-headline text-5xl md:text-7xl text-primary mb-40 drop-shadow-md z-10 text-center">
@@ -90,15 +92,15 @@ export function ProposalSection() {
               ref={noButtonRef}
               className="absolute flex flex-col items-center z-30"
               animate={{ x: noPos.x, y: noPos.y }}
-              transition={{ type: 'spring', stiffness: 1000, damping: 20 }}
-              onMouseEnter={handleNoInteraction}
-              onTouchStart={handleNoInteraction}
+              transition={{ type: 'spring', stiffness: 800, damping: 25 }}
+              onMouseEnter={isMobile ? undefined : handleNoInteraction}
+              onTouchStart={isMobile ? handleNoInteraction : undefined}
             >
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-8 py-6 rounded-full">
                 No
               </Button>
               <motion.p 
-                className="font-headline text-red-500 mt-4 text-lg drop-shadow-lg"
+                className="font-headline text-red-500 mt-4 text-lg drop-shadow-lg whitespace-nowrap"
                 animate={{ scale: [1, 1.1, 1], opacity: [0.8, 1, 0.8] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
                 style={{ textShadow: '0 0 10px rgba(255, 0, 0, 0.7)' }}

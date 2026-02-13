@@ -1,120 +1,118 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FINAL_MEMORIES } from '@/lib/memories-data';
 import Image from 'next/image';
-import { Heart } from 'lucide-react';
+import { HeartRain } from './HeartRain';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function PhotoFinale() {
   const [stage, setStage] = useState(0);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setStage(1), 500),   // BG clears
-      setTimeout(() => setStage(2), 1500),  // Rain
-      setTimeout(() => setStage(3), 3500),  // Circle
-      setTimeout(() => setStage(4), 5500),  // Grid
-      setTimeout(() => setStage(5), 7000),  // Final Text
+      setTimeout(() => setStage(1), 200),    // BG clears
+      setTimeout(() => setStage(2), 1000),   // Rain
+      setTimeout(() => setStage(3), 2500),   // Sides
+      setTimeout(() => setStage(4), 4000),   // Center Burst
+      setTimeout(() => setStage(5), 6000),   // Final Text
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  const polaroidRain = FINAL_MEMORIES.slice(0, 5);
-  const circleGallery = FINAL_MEMORIES.slice(5, 10);
-  const gridFill = FINAL_MEMORIES.slice(10);
+  const rainPhotos = FINAL_MEMORIES.slice(0, 5);
+  const sidePhotos = FINAL_MEMORIES.slice(5, 10);
+  const centerPhotos = FINAL_MEMORIES.slice(10);
+
+  const getPhotoSize = () => isMobile ? { w: '28vw', a: 2 / 3 } : { w: '18vw', a: 2 / 3 };
+  const size = getPhotoSize();
+
+  const photoBaseStyle = `absolute p-2 bg-card/80 backdrop-blur-md shadow-2xl rounded-lg`;
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden">
+      {/* Stage 1: Background Wipe */}
       <AnimatePresence>
         {stage >= 1 && (
           <motion.div
             initial={{ backdropFilter: 'blur(12px)', background: 'hsla(var(--background) / 0.5)' }}
             animate={{ backdropFilter: 'blur(0px)', background: 'hsla(var(--primary) / 0.1)' }}
-            transition={{ duration: 1.5 }}
+            transition={{ duration: 1.5, ease: 'easeIn' }}
             className="absolute inset-0 z-0"
           />
         )}
       </AnimatePresence>
 
-      {/* Stage 2: Polaroid Rain */}
+      {/* Stage 2: The Rain */}
       <AnimatePresence>
-        {stage >= 2 && polaroidRain.map((mem, i) => (
+        {stage >= 2 && rainPhotos.map((mem, i) => (
           <motion.div
             key={`rain-${mem.id}`}
-            initial={{ y: '-100vh', x: `${20 + i * 16}vw`, opacity: 0, rotate: (Math.random() - 0.5) * 60 }}
-            animate={{ y: `${10 + (i % 2) * 15}vh`, opacity: 1, transition: { type: 'spring', stiffness: 50, damping: 15, delay: i * 0.2 } }}
-            className="absolute w-[18vw] h-auto aspect-[2/3] p-2 bg-card/80 backdrop-blur-md shadow-2xl rounded-lg z-10"
+            initial={{ y: '-100vh', x: `${10 + i * 18}vw`, opacity: 0, rotate: (Math.random() - 0.5) * 60 }}
+            animate={{ y: `${5 + (i % 2) * 10}vh`, opacity: 1, transition: { type: 'spring', stiffness: 50, damping: 12, bounce: 0.5, delay: i * 0.15 } }}
+            className={photoBaseStyle}
+            style={{ width: size.w, aspectRatio: size.a, zIndex: i + 1 }}
           >
-            <Image src={mem.imageUrl} alt="Memory" fill sizes="18vw" className="object-cover rounded-sm" data-ai-hint={mem.imageHint} />
+            <Image src={mem.imageUrl} alt="Memory" fill sizes={size.w} className="object-cover rounded-sm" data-ai-hint={mem.imageHint} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+      
+      {/* Stage 3: The Sides */}
+      <AnimatePresence>
+        {stage >= 3 && sidePhotos.map((mem, i) => (
+          <motion.div
+            key={`side-${mem.id}`}
+            initial={{ x: i % 2 === 0 ? '-100vw' : '100vw', opacity: 0, y: `${20 + i * 12}vh`, rotate: (Math.random() - 0.5) * 40 }}
+            animate={{ x: i % 2 === 0 ? '5vw' : '77vw', opacity: 1, transition: { type: 'spring', stiffness: 50, damping: 15, delay: i * 0.15 } }}
+            className={photoBaseStyle}
+            style={{ width: size.w, aspectRatio: size.a, zIndex: rainPhotos.length + i + 1 }}
+          >
+            <Image src={mem.imageUrl} alt="Memory" fill sizes={size.w} className="object-cover rounded-sm" data-ai-hint={mem.imageHint} />
           </motion.div>
         ))}
       </AnimatePresence>
 
-      {/* Stage 3: Circle Gallery */}
-      <AnimatePresence>
-        {stage >= 3 && circleGallery.map((mem, i) => {
-          const angle = (i / circleGallery.length) * 2 * Math.PI;
-          const radius = 25; // vw/vh units
-          return (
+      {/* Stage 4: The Center Burst */}
+       <AnimatePresence>
+        {stage >= 4 && centerPhotos.map((mem, i) => {
+            const pos = isMobile
+            ? [{ x: '35vw', y: '30vh' }, { x: '35vw', y: '55vh' }, {x: '2vw', y: '40vh'}, {x: '68vw', y: '40vh'}, { x: '35vw', y: '80vh' }]
+            : [{ x: '41vw', y: '35vh' }, { x: '25vw', y: '50vh' }, { x: '57vw', y: '50vh' }, { x: '41vw', y: '65vh' }, { x: '41vw', y: '5vh' }];
+           return (
             <motion.div
-              key={`circle-${mem.id}`}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{
-                scale: 1,
-                opacity: 1,
-                x: `calc(50vw - 9vw + ${radius * Math.cos(angle)}vw)`,
-                y: `calc(50vh - 13.5vh + ${radius * Math.sin(angle)}vh)`,
-                rotate: (Math.random() - 0.5) * 30,
-                transition: { type: 'spring', stiffness: 80, damping: 12, delay: i * 0.2 }
-              }}
-              className="absolute w-[18vw] h-auto aspect-[2/3] p-2 bg-card/80 backdrop-blur-md shadow-2xl rounded-lg z-20"
+                key={`center-${mem.id}`}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.15 } }}
+                className={photoBaseStyle}
+                style={{ width: size.w, aspectRatio: size.a, zIndex: rainPhotos.length + sidePhotos.length + i + 1, ...pos[i % pos.length] }}
             >
-              <Image src={mem.imageUrl} alt="Memory" fill sizes="18vw" className="object-cover rounded-sm" data-ai-hint={mem.imageHint} />
+                <Image src={mem.imageUrl} alt="Memory" fill sizes={size.w} className="object-cover rounded-sm" data-ai-hint={mem.imageHint} />
             </motion.div>
-          );
-        })}
-      </AnimatePresence>
-      
-      {/* Stage 4: Grid Fill */}
-      <AnimatePresence>
-        {stage >= 4 && gridFill.map((mem, i) => {
-          const positions = [
-            { top: '5vh', left: '5vw' }, { top: '65vh', left: '80vw' },
-            { top: '70vh', left: '5vw' }, { top: '5vh', left: '80vw' },
-            { top: '35vh', left: '-2vw' }, { top: '35vh', right: '-2vw' }
-          ];
-          return (
-            <motion.div
-              key={`grid-${mem.id}`}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 100, damping: 20, delay: i * 0.25 } }}
-              className="absolute w-[18vw] h-auto aspect-[2/3] p-2 bg-card/80 backdrop-blur-md shadow-2xl rounded-lg z-30"
-              style={positions[i % positions.length]}
-            >
-              <Image src={mem.imageUrl} alt="Memory" fill sizes="18vw" className="object-cover rounded-sm" data-ai-hint={mem.imageHint} />
-            </motion.div>
-          )
+           )
         })}
       </AnimatePresence>
 
-      {/* Stage 5: Final Overlay */}
+      {/* Stage 5: Final Reveal */}
       <AnimatePresence>
         {stage >= 5 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 2 } }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-40 pointer-events-none"
-          >
-            <Heart className="w-48 h-48 text-red-500/80 drop-shadow-lg" fill="currentColor" />
-            <motion.h2
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1, transition: { type: 'spring', delay: 0.5 } }}
-              className="font-headline text-5xl md:text-7xl text-white -mt-24 drop-shadow-2xl"
+          <>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 200, damping: 25, delay: 0.5 } }}
+              className="absolute inset-0 flex items-center justify-center z-50"
             >
-              I Love You Too!
-            </motion.h2>
-          </motion.div>
+              <div className="relative p-8 md:p-12 text-center bg-white/20 backdrop-blur-xl rounded-2xl border border-white/30 shadow-2xl">
+                <h2 className="font-headline text-5xl md:text-7xl text-white drop-shadow-2xl">
+                  I LOVE YOU TOO! ❤️
+                </h2>
+              </div>
+            </motion.div>
+            <HeartRain />
+          </>
         )}
       </AnimatePresence>
     </div>

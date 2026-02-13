@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const confettiColors = [
@@ -12,8 +12,10 @@ const confettiColors = [
 ];
 
 export function Confetti() {
-  const confettiPieces = useMemo(() => 
-    Array.from({ length: 150 }).map((_, i) => {
+  const [confettiPieces, setConfettiPieces] = useState<JSX.Element[]>([]);
+  
+  useEffect(() => {
+    const generatedPieces = Array.from({ length: 150 }).map((_, i) => {
       const style = {
         left: `${Math.random() * 100}%`,
         animation: `confetti-fall ${Math.random() * 3 + 2}s ease-out ${Math.random() * 2}s forwards`,
@@ -33,8 +35,9 @@ export function Confetti() {
           }}
         />
       );
-    }),
-  []);
+    });
+    setConfettiPieces(generatedPieces);
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-50">

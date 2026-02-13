@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
 const HeartIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -9,8 +9,10 @@ const HeartIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export function FloatingHearts() {
-  const hearts = useMemo(() => 
-    Array.from({ length: 20 }).map((_, i) => {
+  const [hearts, setHearts] = useState<JSX.Element[]>([]);
+
+  useEffect(() => {
+    const generatedHearts = Array.from({ length: 20 }).map((_, i) => {
       const style = {
         left: `${Math.random() * 100}%`,
         animation: `float ${Math.random() * 8 + 7}s linear ${Math.random() * 10}s infinite`,
@@ -18,8 +20,9 @@ export function FloatingHearts() {
         height: `${Math.random() * 20 + 10}px`,
       };
       return <HeartIcon key={i} className="absolute bottom-[-50px] text-primary/30" style={style} />;
-    }),
-  []);
+    });
+    setHearts(generatedHearts);
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">

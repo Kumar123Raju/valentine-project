@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuthenticationScreen } from '@/components/love/AuthenticationScreen';
 import { ProposalContent } from '@/components/love/ProposalContent';
-import { FloatingHearts } from '@/components/love/FloatingHearts';
+import { FloatingPetals } from '@/components/love/FloatingPetals';
 
 export default function Home() {
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -21,9 +21,7 @@ export default function Home() {
   if (!isClient) {
     // Return a simple loader or null to avoid hydration mismatch on server
     return (
-      <main className="relative min-h-screen w-full overflow-hidden bg-background">
-        <FloatingHearts />
-      </main>
+      <main className="relative min-h-screen w-full overflow-hidden bg-background" />
     );
   }
 
@@ -36,7 +34,7 @@ export default function Home() {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.5 }}
           >
-            <FloatingHearts />
+            <FloatingPetals />
             <AuthenticationScreen onUnlock={handleUnlock} />
           </motion.div>
         ) : (

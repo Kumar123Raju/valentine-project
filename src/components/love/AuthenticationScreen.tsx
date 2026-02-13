@@ -56,7 +56,7 @@ export function AuthenticationScreen({ onUnlock }: AuthenticationScreenProps) {
             onChange={(e) => setSecretName(e.target.value)}
             className="text-center bg-transparent placeholder:text-foreground/50 h-12 text-lg"
           />
-          <Button type="submit" className="w-full h-12 text-lg bg-primary hover:bg-primary/80">
+          <Button type="submit" className="w-full h-12 text-lg bg-primary hover:bg-primary/80 animate-pulse">
             <Heart className="mr-2 h-5 w-5 fill-primary-foreground" />
             Unlock Our Story
           </Button>

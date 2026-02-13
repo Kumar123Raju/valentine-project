@@ -6,9 +6,7 @@ import { cn } from '@/lib/utils';
 const confettiColors = [
   'bg-primary',
   'bg-accent',
-  'bg-pink-400',
-  'bg-red-400',
-  'bg-yellow-400',
+  'bg-secondary',
 ];
 
 export function Confetti() {

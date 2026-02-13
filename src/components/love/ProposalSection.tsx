@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Confetti } from './Confetti';
+import { FloatingHearts } from './FloatingHearts';
 
 export function ProposalSection() {
   const [isYes, setIsYes] = useState(false);
@@ -27,7 +28,7 @@ export function ProposalSection() {
   };
   
   return (
-    <section ref={containerRef} className="w-full relative py-24 text-center min-h-[60vh] flex flex-col items-center justify-center overflow-hidden px-4">
+    <section ref={containerRef} className="w-full relative py-24 text-center min-h-screen flex flex-col items-center justify-center overflow-hidden px-4">
       <AnimatePresence>
         {isYes && (
           <motion.div
@@ -38,9 +39,10 @@ export function ProposalSection() {
             className="absolute inset-0 flex items-center justify-center flex-col"
           >
             <h2 className="font-headline text-5xl md:text-7xl text-primary animate-pulse">
-              I Love You Too!
+              I Love You More!
             </h2>
             <Confetti />
+            <FloatingHearts count={50} color="text-red-500" />
           </motion.div>
         )}
       </AnimatePresence>

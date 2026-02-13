@@ -8,24 +8,30 @@ const HeartIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export function FloatingHearts() {
+type FloatingHeartsProps = {
+  count?: number;
+  color?: string;
+}
+
+export function FloatingHearts({ count = 20, color = 'text-red-500' }: FloatingHeartsProps) {
   const [hearts, setHearts] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
-    const generatedHearts = Array.from({ length: 20 }).map((_, i) => {
+    const generatedHearts = Array.from({ length: count }).map((_, i) => {
       const style = {
         left: `${Math.random() * 100}%`,
         animation: `float ${Math.random() * 8 + 7}s linear ${Math.random() * 10}s infinite`,
-        width: `${Math.random() * 20 + 10}px`,
-        height: `${Math.random() * 20 + 10}px`,
+        width: `${Math.random() * 30 + 15}px`,
+        height: `${Math.random() * 30 + 15}px`,
+        opacity: Math.random() * 0.7 + 0.3,
       };
-      return <HeartIcon key={i} className="absolute bottom-[-50px] text-primary/30" style={style} />;
+      return <HeartIcon key={i} className={`absolute bottom-[-50px] ${color}`} style={style} />;
     });
     setHearts(generatedHearts);
-  }, []);
+  }, [count, color]);
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
+    <div className="fixed top-0 left-0 w-full h-full z-50 overflow-hidden pointer-events-none">
       {hearts}
     </div>
   );

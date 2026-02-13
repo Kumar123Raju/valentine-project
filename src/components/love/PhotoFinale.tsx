@@ -51,7 +51,7 @@ export function PhotoFinale() {
         {stage >= 2 && rainPhotos.map((mem, i) => (
           <motion.div
             key={`rain-${mem.id}`}
-            initial={{ y: '-100vh', x: `${10 + i * 18}vw`, opacity: 0, rotate: (Math.random() - 0.5) * 60 }}
+            initial={{ y: '-100vh', x: isMobile ? `${5 + i * 16}vw` : `${10 + i * 18}vw`, opacity: 0, rotate: (Math.random() - 0.5) * 60 }}
             animate={{ y: `${5 + (i % 2) * 10}vh`, opacity: 1, transition: { type: 'spring', stiffness: 50, damping: 12, bounce: 0.5, delay: i * 0.15 } }}
             className={photoBaseStyle}
             style={{ width: size.w, aspectRatio: size.a, zIndex: i + 1 }}
@@ -66,8 +66,8 @@ export function PhotoFinale() {
         {stage >= 3 && sidePhotos.map((mem, i) => (
           <motion.div
             key={`side-${mem.id}`}
-            initial={{ x: i % 2 === 0 ? '-100vw' : '100vw', opacity: 0, y: `${20 + i * 12}vh`, rotate: (Math.random() - 0.5) * 40 }}
-            animate={{ x: i % 2 === 0 ? '5vw' : '77vw', opacity: 1, transition: { type: 'spring', stiffness: 50, damping: 15, delay: i * 0.15 } }}
+            initial={{ x: i % 2 === 0 ? '-100vw' : '100vw', opacity: 0, y: `${15 + (i * 16)}vh`, rotate: (Math.random() - 0.5) * 40 }}
+            animate={{ x: i % 2 === 0 ? '5vw' : (isMobile ? '67vw' : '77vw'), opacity: 1, transition: { type: 'spring', stiffness: 50, damping: 15, delay: i * 0.15 } }}
             className={photoBaseStyle}
             style={{ width: size.w, aspectRatio: size.a, zIndex: rainPhotos.length + i + 1 }}
           >
@@ -80,7 +80,7 @@ export function PhotoFinale() {
        <AnimatePresence>
         {stage >= 4 && centerPhotos.map((mem, i) => {
             const pos = isMobile
-            ? [{ x: '35vw', y: '30vh' }, { x: '35vw', y: '55vh' }, {x: '2vw', y: '40vh'}, {x: '68vw', y: '40vh'}, { x: '35vw', y: '80vh' }]
+            ? [{ x: '35vw', y: '30vh' }, { x: '35vw', y: '55vh' }, {x: '2vw', y: '40vh'}, {x: '65vw', y: '40vh'}, { x: '35vw', y: '80vh' }]
             : [{ x: '41vw', y: '35vh' }, { x: '25vw', y: '50vh' }, { x: '57vw', y: '50vh' }, { x: '41vw', y: '65vh' }, { x: '41vw', y: '5vh' }];
            return (
             <motion.div

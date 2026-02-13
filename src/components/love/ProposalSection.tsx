@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -57,7 +58,7 @@ export function ProposalSection() {
             exit={{ opacity: 0, y: -100, transition: { duration: 0.5, ease: 'easeOut' } }}
             className="flex flex-col items-center justify-center fixed inset-0"
           >
-            <h2 className="font-headline text-5xl md:text-7xl text-primary mb-40 drop-shadow-md z-10 text-center">
+            <h2 className="font-headline text-5xl md:text-7xl text-primary mb-32 md:mb-40 drop-shadow-md z-10 text-center">
               Will you be my Valentine forever?
             </h2>
 
@@ -76,7 +77,7 @@ export function ProposalSection() {
                 style={{
                   boxShadow: `0 0 40px 10px hsl(var(--accent) / 0.5)`,
                 }}
-                className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full z-10 h-auto text-4xl px-16 py-8"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full z-10 h-auto text-3xl md:text-4xl px-12 md:px-16 py-6 md:py-8"
                 onClick={handleYesClick}
               >
                 Yes!
@@ -96,7 +97,7 @@ export function ProposalSection() {
                 No
               </Button>
               <motion.p 
-                className="font-headline text-red-500 mt-4 text-lg drop-shadow-lg whitespace-nowrap"
+                className="font-headline text-red-500 mt-4 text-lg drop-shadow-lg"
                 animate={{ scale: [1, 1.1, 1], opacity: [0.8, 1, 0.8] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
                 style={{ textShadow: '0 0 10px rgba(255, 0, 0, 0.7)' }}

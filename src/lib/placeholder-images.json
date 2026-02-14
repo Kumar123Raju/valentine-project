@@ -2,33 +2,33 @@
   "placeholderImages": [
     {
       "id": "gallery-1",
-      "description": "Our first trip together. The start of everything.",
-      "imageUrl": "https://images.unsplash.com/photo-1576595014186-c66433362597?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjb3VwbGUlMjBiZWFjaHxlbnwwfHx8fDE3NzA5NTAxNDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "couple beach"
+      "description": "Our first meet together. The start of everything.",
+      "imageUrl": "/memories/memory20.png",
+      "imageHint": "Beggining of our love story"
     },
     {
       "id": "gallery-2",
-      "description": "That silly face you make. Always makes me smile.",
-      "imageUrl": "https://images.unsplash.com/photo-1501901609772-df0848060b33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjb3VwbGUlMjBzbWlsaW5nfGVufDB8fHx8MTc3MDk4MTAzNnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "couple smiling"
+      "description": "My silly face . Always try to  make you laugh.",
+      "imageUrl": "/memories/memory17.png",
+      "imageHint": "start feeling one sided love"
     },
     {
       "id": "gallery-3",
-      "description": "Cozy evenings are the best with you.",
-      "imageUrl": "https://images.unsplash.com/photo-1552417808-e872f6ca6853?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb3VwbGUlMjBpbmRvb3JzfGVufDB8fHx8MTc3MTAwNjE1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "couple indoors"
+      "description": "Your silence started to hurt, but my love for you never wavered. Even when you ignored me, you remained my world.",
+      "imageUrl": "/memories/memory18.png",
+      "imageHint": "love through pain and separation"
     },
     {
       "id": "gallery-4",
-      "description": "Remember this sunset? Unforgettable.",
-      "imageUrl": "https://images.unsplash.com/photo-1575388104683-e076ee9ccaa0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb3VwbGUlMjBzdW5zZXR8ZW58MHx8fHwxNzcwOTk4OTA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "couple sunset"
+      "description": "Our first visit to the temple together. That's when we truly started to grow closer, feeling the warmth of each other's presence.",
+      "imageUrl": "/memories/memory19.png",
+      "imageHint": "temple visit and growing closeness"
     },
     {
       "id": "gallery-5",
-      "description": "To many more adventures, my love.",
-      "imageUrl": "https://images.unsplash.com/photo-1629401681628-a37c83eb57d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb3VwbGUlMjBoaWtpbmd8ZW58MHx8fHwxNzcxMDAyMzkyfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "couple hiking"
+      "description": "That moment when we were so close, and you kissed me... Time seemed to stop. My heart raced, and the whole world disappeared. It was pure magic, the sweetest moment I've ever felt.",
+      "imageUrl": "/memories/memory5.png",
+      "imageHint": "our kiss and intimate connection always very special"
     }
   ]
 }

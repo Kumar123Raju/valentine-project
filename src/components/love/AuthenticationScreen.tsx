@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Heart } from 'lucide-react';
 import { ImagePreloader } from './ImagePreloader';
 
-const SECRET_NAME = 'Sweetheart'; // Case-insensitive check
+const SECRET_NAME = 'Bachwa'; // Case-insensitive check
 
 type GlowingVaultProps = {
   onUnlock: () => void;
@@ -65,7 +65,7 @@ export function GlowingVault({ onUnlock }: GlowingVaultProps) {
           transition={{ duration: 1, ease: 'easeOut' }}
           className="relative w-80 h-80 md:w-96 md:h-96 p-8 rounded-full bg-card/10 backdrop-blur-2xl shadow-2xl border border-white/20 flex flex-col items-center justify-center gap-6"
         >
-          <h1 className="font-headline text-5xl text-center text-primary drop-shadow-lg">LoveBloom</h1>
+          <h1 className="font-headline text-5xl text-center text-primary drop-shadow-lg">Heart of my Bachwa</h1>
           <p className="text-center text-foreground/80 -mt-4">A secret name to unlock our story.</p>
           <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full">
             <Input

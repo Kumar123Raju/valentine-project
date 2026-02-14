@@ -45,19 +45,44 @@ export function Storybook({ onComplete }: StorybookProps) {
     setMessageSent(false);
   }, [page]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!message.trim()) return;
-    console.log(`Message for page ${page}: ${message}`);
-    setMessageSent(true);
-    toast({
-      title: (
-        <div className="flex items-center gap-2">
-          <HeartPulse className="text-primary" />
-          <span>Message Delivered!</span>
-        </div>
-      ),
-      description: "Message delivered to Bachwa's heart",
-    });
+
+    try {
+      // Send message to server API for logging
+      const response = await fetch('/api/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: chapter.question,
+          answer: message,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+
+      setMessageSent(true);
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <HeartPulse className="text-primary" />
+            <span>Message Delivered!</span>
+          </div>
+        ),
+        description: "Message delivered to Bachwa's heart",
+      });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to send message. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const paginate = (newDirection: number) => {

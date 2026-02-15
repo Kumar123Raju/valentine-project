@@ -42,8 +42,8 @@ export const STORY_STEPS: StoryStep[] = [
   },
   {
     id: 'step-5',
-    title: 'When You Kissed Me',
-    question: "When you kissed me, the whole world disappeared. How did that moment feel for you?",
+    title: 'smile together',
+    question: "smile together, the whole world disappeared. How did that moment feel for you?",
     placeholderText: "It felt like...",
     image: galleryImages[4],
   },
